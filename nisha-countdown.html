@@ -19,7 +19,7 @@
         // set target date
         (async () => {
             try {
-                const response = await fetch('http://165.22.173.185:8080/get-time', {
+                const response = await fetch('https://cors-anywhere.herokuapp.com/http://165.22.173.185:8080/get-time'), {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
