@@ -22,18 +22,18 @@
                 const response = await fetch('https://cors-anywhere.herokuapp.com/http://165.22.173.185:8080/get-time', {
                     method: 'GET',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'HttpRequest'
                     }
                 });
-        
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
-        
+
                 const startTime = await response.json();
                 console.log('Time data:', startTime);
-        
-                // Assuming startTime is a valid date or timestamp string
+
                 targetDate = new Date(startTime).getTime();
             } catch (error) {
                 console.error('Error fetching time:', error);
