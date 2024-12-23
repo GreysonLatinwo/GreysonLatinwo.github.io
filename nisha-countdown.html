@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nisha Countdown Timer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen">
+    <div class="text-center">
+        <h1 class="text-4xl md:text-6xl font-bold mb-6">Nisha Countdown</h1>
+        <p id="countdown" class="text-lg md:text-2xl">Loading...</p>
+    </div>
+
+    <script>
+        var targetDate;
+        // set target date
+        (async () => {
+            try {
+                const response = await fetch('http://165.22.173.185:8080/get-time', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const startTime = await response.json();
+                console.log('Time data:', startTime);
+
+                targetDate = new Date(startTime).getTime();
+            } catch (error) {
+                console.error('Error fetching time:', error);
+            }
+        })();
+
+        function updateCountdown() {
+            const now = Date.now();
+            const timeRemaining = targetDate - now;
+
+            if (timeRemaining <= 0) {
+                document.getElementById("countdown").innerHTML = "🎉 ANISHA'S HEREEEE!! 🎉";
+                return;
+            }
+
+            const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+            const milliseconds = Math.floor(timeRemaining % 1e3);
+
+            document.getElementById("countdown").innerHTML = `
+                <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8">
+                    <div class="text-center">
+                        <span class="text-6xl font-bold">${days}</span>
+                        <p class="text-xl font-light uppercase">Days</p>
+                    </div>
+                    <div class="text-center">
+                        <span class="text-6xl font-bold">${hours}</span>
+                        <p class="text-xl font-light uppercase">Hours</p>
+                    </div>
+                    <div class="text-center">
+                        <span class="text-6xl font-bold">${minutes}</span>
+                        <p class="text-xl font-light uppercase">Minutes</p>
+                    </div>
+                    <div class="text-center">
+                        <span class="text-6xl font-bold">${seconds}</span>
+                        <p class="text-xl font-light uppercase">Seconds</p>
+                    </div>
+                    <div class="text-center">
+                        <span class="text-6xl font-bold">${milliseconds}</span>
+                        <p class="text-xl font-light uppercase">Milliseconds</p>
+                    </div>
+                </div>
+            `;
+
+            // Use requestAnimationFrame for smooth updates
+            requestAnimationFrame(updateCountdown);
+        }
+
+        // Start the countdown
+        updateCountdown();
+    </script>
+</body>
+
+</html>
